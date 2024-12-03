@@ -1,3 +1,5 @@
+[![Continuous Integration](https://github.com/RussellChamp/advent-of-code-2024-rust/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/RussellChamp/advent-of-code-2024-rust/actions/workflows/ci.yml)
+
 <img src="./.assets/christmas_ferris.png" width="164">
 
 # 🎄 Advent of Code {year}
