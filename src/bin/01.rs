@@ -22,7 +22,7 @@ pub fn part_one(input: &str) -> Option<u32> {
         // println!("Line {}: abs({} - {}) = {}", i+1, vec_a[i], vec_b[i], diff)
     }
     // println!("Total {result}");
-    return Some(result);
+    Some(result)
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
@@ -41,16 +41,15 @@ pub fn part_two(input: &str) -> Option<u32> {
     vec_a.sort();
     vec_b.sort();
 
-    for i in 0..vec_a.len() {
-        let needle = vec_a[i];
-        let found = vec_b.iter().filter(|&&b| b == needle).count() as u32;
-        let similarity = found * needle;
+    for item in &vec_a {
+        let found = vec_b.iter().filter(|&b| b == item).count() as u32;
+        let similarity = found * item;
         result += similarity;
 
         // println!("Line {}: {} found {} times = {}, total {}", i + 1, needle, found, similarity, result);
     }
     // println!("Total {result}");
-    return Some(result);
+    Some(result)
 }
 
 #[cfg(test)]

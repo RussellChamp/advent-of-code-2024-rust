@@ -11,10 +11,10 @@ pub fn part_one(input: &str) -> Option<u32> {
         let b = b_str.parse::<u32>().unwrap();
         let product = a * b;
 
-        return total + product;
+        total + product
     });
 
-    return Some(result);
+    Some(result)
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
@@ -25,21 +25,21 @@ pub fn part_two(input: &str) -> Option<u32> {
         // println!("Captures: {command} ({a_str}, {b_str})");
 
         match command {
-            "do" => return (true, total),
-            "don't" => return (false, total),
+            "do" => (true, total),
+            "don't" => (false, total),
             "mul" => {
                 if !enabled { return (enabled, total) };
 
                 let a = a_str.parse::<u32>().unwrap();
                 let b = b_str.parse::<u32>().unwrap();
                 let product = a * b;
-                return (enabled, total + product)
+                (enabled, total + product)
             },
             _ => panic!("Could not match command {command}"),
         }
     });
 
-    return Some(result);
+    Some(result)
 }
 
 #[cfg(test)]

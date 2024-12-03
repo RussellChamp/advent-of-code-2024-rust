@@ -7,10 +7,10 @@ pub fn part_one(input: &str) -> Option<u32> {
         let values: Vec<_> = line.split(" ").map(|f| f.parse::<u32>().unwrap()).collect();
         let is_valid = is_valid_report(&values);
         // println!("Report {} {} valid", line, if is_valid { "is" } else { "is NOT" });
-        if is_valid { return total + 1 } else { return total };
+        if is_valid { total + 1 } else { total }
     });
 
-    return Some(valid_reports);
+    Some(valid_reports)
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
@@ -21,10 +21,10 @@ pub fn part_two(input: &str) -> Option<u32> {
 
         let is_valid = is_any_valid_report(&values);
         // println!("Report {} {} valid", line, if is_valid { "is" } else { "is NOT" });
-        if is_valid { return total + 1 } else { return total };
+        if is_valid { total + 1 } else { total }
     });
 
-    return Some(valid_reports);
+    Some(valid_reports)
 }
 
 enum Direction {
@@ -33,7 +33,7 @@ enum Direction {
     Decreasing,
 }
 
-fn is_valid_report(values: &Vec<u32>) -> bool {
+fn is_valid_report(values: &[u32]) -> bool {
     let mut direction = Direction::Unknown;
     // println!("Checking values {:?}", values);
     let mut last_report = *values.first().unwrap();
@@ -66,10 +66,10 @@ fn is_valid_report(values: &Vec<u32>) -> bool {
         last_report = report;
     }
 
-    return true;
+    true
 }
 
-fn is_any_valid_report(values: &Vec<u32>) -> bool {
+fn is_any_valid_report(values: &[u32]) -> bool {
     if is_valid_report(values) {
         return true;
     }
@@ -80,20 +80,18 @@ fn is_any_valid_report(values: &Vec<u32>) -> bool {
         }
     }
 
-    return false;
+    false
 }
 
-fn copy_except(values: &Vec<u32>, exclude_idx: usize) -> Vec<u32> {
+fn copy_except(values: &[u32], exclude_idx: usize) -> Vec<u32> {
     let mut new_values: Vec<u32> = Vec::new();
-    let mut idx = 0;
-    for value in values {
+    for (idx, value) in values.iter().enumerate() {
         if idx != exclude_idx {
             new_values.push(*value);
         }
-        idx += 1;
     }
     // println!("copied new values {:?}", new_values);
-    return new_values;
+    new_values
 }
 
 #[cfg(test)]
