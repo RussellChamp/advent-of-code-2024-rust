@@ -9,15 +9,15 @@ pub fn part_one(input: &str) -> Option<usize> {
 
         // println!("LINE: {} = {:?}", total, values);
 
-        if can_calc(total, values) { Some(total) } else { None }
+        if can_calc(total, &values) { Some(total) } else { None }
         // Some(total)
     }).sum();
     // println!("TOTAL: {}", total);
 
-    return Some(total);
+    Some(total)
 }
 
-pub fn part_two(input: &str) -> Option<u32> {
+pub fn part_two(_input: &str) -> Option<u32> {
     None
 }
 
@@ -26,16 +26,16 @@ pub fn part_two(input: &str) -> Option<u32> {
 // eg 190: 10 19 -- has TWO possible paths, 10 + 19 and 10 * 19
 // eg 123: 4 5 6 3 -- has 8 possible paths; 4+5+6+3,  4+5+6*3, ... 4*5*6*3
 
-fn can_calc(total: usize, values: Vec<usize>) -> bool {
-    let is_valid = values.into_iter().fold(vec![0 as usize], |subtotals, next_value| {
+fn can_calc(total: usize, values: &[usize]) -> bool {
+    let is_valid = values.iter().fold(vec![0_usize], |subtotals, next_value| {
         process(&subtotals, next_value)
     }).iter().any(|t| *t == total);
 
     is_valid
 }
 
-fn process(sum: &Vec<usize>, next_value: usize) -> Vec<usize> {
-    sum.into_iter().flat_map(|v| {
+fn process(sum: &[usize], next_value: &usize) -> Vec<usize> {
+    sum.iter().flat_map(|v| {
         vec![v + next_value, v * next_value]
     }).collect()
 }
@@ -46,19 +46,19 @@ mod tests {
 
     #[test]
     fn test_process() {
-        let sum: Vec<u32> = vec![1];
+        let sum = [1];
         let next_value = 10;
 
-        let result = process(&sum, next_value);
+        let result = process(&sum, &next_value);
         assert_eq!(result, vec![11, 10]);
     }
 
     #[test]
     fn test_can_calc() {
-        let values: Vec<u32> = vec![1,2,3,4];
-        let total: u32 = 10;
+        let values = [1,2,3,4];
+        let total = 10;
 
-        let result = can_calc(total, values);
+        let result = can_calc(total, &values);
         assert_eq!(result, true);
     }
 

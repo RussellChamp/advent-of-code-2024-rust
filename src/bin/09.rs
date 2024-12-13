@@ -23,7 +23,7 @@ pub fn part_one(input: &str) -> Option<u32> {
     Some(checksum as u32)
 }
 
-pub fn part_two(input: &str) -> Option<u32> {
+pub fn part_two(_input: &str) -> Option<u32> {
     None
 }
 
@@ -45,18 +45,18 @@ fn move_blocks(mut blocks: Vec<Option<usize>>) -> Vec<Option<usize>>{
     let mut head_ptr = 0;
     let mut tail_ptr = blocks.len() - 1;
 
-    while blocks[tail_ptr] == None {
+    while Option::is_none(&blocks[tail_ptr]) {
         tail_ptr -= 1;
     }
 
     while head_ptr <= tail_ptr {
-        if blocks[head_ptr] == None {
+        if Option::is_none(&blocks[head_ptr]) {
             blocks.swap(head_ptr, tail_ptr);
         }
 
         head_ptr += 1;
 
-        while blocks[tail_ptr] == None {
+        while Option::is_none(&blocks[tail_ptr]) {
             tail_ptr -= 1;
         }
     }
@@ -65,16 +65,13 @@ fn move_blocks(mut blocks: Vec<Option<usize>>) -> Vec<Option<usize>>{
 }
 
 fn get_checksum(blocks: Vec<Option<usize>>) -> usize {
-    let checksum = blocks.into_iter().enumerate().fold(0 as usize, |sum, (idx, id)| {
-        if id == None {
+    blocks.into_iter().enumerate().fold(0_usize, |sum, (idx, id)| {
+        if Option::is_none(&id) {
             sum
         } else {
-            let total = sum + idx.mul(id.unwrap() as usize);
-            total
+            sum + idx.mul(id.unwrap())
         }
-    });
-
-    checksum
+    })
 }
 
 #[cfg(test)]

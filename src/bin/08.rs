@@ -14,10 +14,10 @@ pub fn part_one(input: &str) -> Option<u32> {
 
         for (col_idx, c) in line.chars().enumerate(){
             if c != '.' {
-                if antennas.contains_key(&c) {
-                    antennas.entry(c).and_modify(|v| v.push((row_idx as u32, col_idx as u32)));
-                } else {
+                if let std::collections::hash_map::Entry::Vacant(_e) = antennas.entry(c) {
                     antennas.insert(c, vec![(row_idx as u32, col_idx as u32)]);
+                } else {
+                    antennas.entry(c).and_modify(|v| v.push((row_idx as u32, col_idx as u32)));
                 }
             }
         }
@@ -39,7 +39,7 @@ pub fn part_one(input: &str) -> Option<u32> {
     Some(locations.count() as u32)
 }
 
-pub fn part_two(input: &str) -> Option<u32> {
+pub fn part_two(_input: &str) -> Option<u32> {
     None
 }
 

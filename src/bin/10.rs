@@ -37,7 +37,7 @@ pub fn part_one(input: &str) -> Option<u32> {
     Some(total_score as u32)
 }
 
-pub fn part_two(input: &str) -> Option<u32> {
+pub fn part_two(_input: &str) -> Option<u32> {
     None
 }
 
@@ -51,9 +51,9 @@ fn can_navigate(grid: &Vec<Vec<u32>>, start: &Path, end: &Path) -> bool {
     if start == end { return true }
 
     DIRECTIONS.iter().any(|d| {
-        let next_step = Path { row: &start.row + d.0, col: &start.col + d.1, elevation: start.elevation + 1 };
+        let next_step = Path { row: start.row + d.0, col: start.col + d.1, elevation: start.elevation + 1 };
         // println!("{:?} ==> {:?} ?", start, end);
-        is_valid(&next_step) && can_navigate(&grid, &next_step, &end)
+        is_valid(&next_step) && can_navigate(grid, &next_step, end)
     })
 }
 

@@ -26,6 +26,7 @@ type Direction = (isize, isize);
 // }
 
 #[derive(Debug)]
+#[allow(dead_code)]
 struct Region {
     id: u32,
     edges: usize,
@@ -37,7 +38,7 @@ pub fn part_one(input: &str) -> Option<u32> {
     let mut regions: HashMap<u32, Region> = HashMap::new();
     let mut next_region_id = 1;
 
-    while let Some(plot) = find_plot(&plots, |p| p.region_id == None) {
+    while let Some(plot) = find_plot(&plots, |p| Option::is_none(&p.region_id)) {
         plots[plot.0][plot.1].region_id = Some(next_region_id);
 
         let edge_count = count_edges(&plots, &plot);
@@ -56,12 +57,16 @@ pub fn part_one(input: &str) -> Option<u32> {
     Some(total as u32)
 }
 
-pub fn part_two(input: &str) -> Option<u32> {
-    let mut plots = input.lines().map(|l| l.chars().map(|c| Plot { letter: c, region_id: None }).collect_vec()).collect_vec();
+#[allow(unreachable_code)]
+pub fn part_two(_input: &str) -> Option<u32> {
+    // TODO: Get this working
+    return None;
+
+    let mut plots = _input.lines().map(|l| l.chars().map(|c| Plot { letter: c, region_id: None }).collect_vec()).collect_vec();
     let mut regions: HashMap<u32, Region> = HashMap::new();
     let mut next_region_id = 1;
 
-    while let Some(plot) = find_plot(&plots, |p| p.region_id == None) {
+    while let Some(plot) = find_plot(&plots, |p| Option::is_none(&p.region_id)) {
         plots[plot.0][plot.1].region_id = Some(next_region_id);
 
         let edge_count = count_edges(&plots, &plot);
@@ -71,22 +76,21 @@ pub fn part_two(input: &str) -> Option<u32> {
         update_neighbors(&mut plots, &plot, &mut regions);
     }
 
-    let w = plots.iter().map(|p| p.iter().map(|p| p.letter).collect::<String>()).join("\n");
+    // let w = plots.iter().map(|p| p.iter().map(|p| p.letter).collect::<String>()).join("\n");
     // println!("{}", w);
 
     let total = regions.iter().sorted_by_key(|r| r.0).fold(0, |sum, (region_id, region)| {
         let start_plot = find_plot(&plots, |p| p.region_id == Some(*region_id)).unwrap();
-        print!("REGION {}:", region.id);
+        // print!("REGION {}:", region.id);
         let edges = traverse_start(&plots, &start_plot);
-        let total = sum + (region.count * edges);
+        sum + (region.count * edges)
         // println!(" = {} * {} = {}", region.count, edges, region.count * edges);
-        total
     });
 
     Some(total as u32)
 }
 
-fn find_plot<F>(plots: &Vec<Vec<Plot>>, predicate: F) -> Option<(usize, usize)> where
+fn find_plot<F>(plots: &[Vec<Plot>], predicate: F) -> Option<(usize, usize)> where
 F: Fn(&Plot) -> bool {
     for (row_idx, row) in plots.iter().enumerate() {
         for (col_idx, plot) in row.iter().enumerate() {
@@ -96,7 +100,7 @@ F: Fn(&Plot) -> bool {
             }
         }
     }
-    return None
+    None
 }
 
 fn update_neighbors(plots: &mut Vec<Vec<Plot>>, plot: &(usize, usize), regions: &mut HashMap<u32, Region>) {
@@ -116,7 +120,7 @@ fn update_neighbors(plots: &mut Vec<Vec<Plot>>, plot: &(usize, usize), regions: 
             (0..grid_height as isize).contains(new_row_idx) &&
             (0..grid_width as isize).contains(new_col_idx) &&
             plots[*new_row_idx as usize][*new_col_idx as usize].letter == current_region_letter &&
-            plots[*new_row_idx as usize][*new_col_idx as usize].region_id == None;
+            Option::is_none(&plots[*new_row_idx as usize][*new_col_idx as usize].region_id);
 
         if should_update {
             let next_plot: (usize, usize) = (*new_row_idx as usize, *new_col_idx as usize);
@@ -131,13 +135,13 @@ fn update_neighbors(plots: &mut Vec<Vec<Plot>>, plot: &(usize, usize), regions: 
     }
 }
 
-fn count_edges(plots: &Vec<Vec<Plot>>, plot: &(usize, usize)) -> usize {
+fn count_edges(plots: &[Vec<Plot>], plot: &(usize, usize)) -> usize {
     let grid_height = plots.len();
     let grid_width = plots[0].len();
 
-    vec![(-1, 0), (1, 0), (0, -1), (0, 1)].iter().filter(|d| {
-        let new_row = plot.0 as isize + &d.0;
-        let new_col = plot.1 as isize + &d.1;
+    [(-1, 0), (1, 0), (0, -1), (0, 1)].iter().filter(|d| {
+        let new_row = plot.0 as isize + d.0;
+        let new_col = plot.1 as isize + d.1;
 
         !(0..grid_height as isize).contains(&new_row) ||
         !(0..grid_width as isize).contains(&new_col) ||
@@ -145,13 +149,13 @@ fn count_edges(plots: &Vec<Vec<Plot>>, plot: &(usize, usize)) -> usize {
     }).count()
 }
 
-fn traverse_start(plots: &Vec<Vec<Plot>>, plot: &(usize, usize)) -> usize {
+fn traverse_start(plots: &[Vec<Plot>], plot: &(usize, usize)) -> usize {
     let start_direction: Direction = (0, 1);
 
-    let mut prior_plot = plot.clone();
-    let mut prior_direction = start_direction.clone();
+    let mut prior_plot = *plot;
+    let mut prior_direction = start_direction;
 
-    println!(" at {:?} going {}", plot, debug_direction(start_direction));
+    // println!(" at {:?} going {}", plot, debug_direction(start_direction));
 
     // count the number of times we turn a corner
     let mut corners = 0;
@@ -167,7 +171,7 @@ fn traverse_start(plots: &Vec<Vec<Plot>>, plot: &(usize, usize)) -> usize {
     corners
 }
 
-fn traverse_step(plots: &Vec<Vec<Plot>>, plot: &(usize, usize), direction: Direction) -> Option<((usize, usize), Direction)> {
+fn traverse_step(plots: &[Vec<Plot>], plot: &(usize, usize), direction: Direction) -> Option<((usize, usize), Direction)> {
     let grid_height = plots.len();
     let grid_width = plots[0].len();
 
@@ -181,34 +185,35 @@ fn traverse_step(plots: &Vec<Vec<Plot>>, plot: &(usize, usize), direction: Direc
     };
 
     let ccw_curve = directions.windows(2).find(|dd| dd[0] == direction).map(|dd| dd[1]).unwrap();
-    let ccw_plot = get_at(plot.0 as isize + ccw_curve.0 as isize, plot.1 as isize + ccw_curve.1 as isize);
-    let next_plot = get_at(plot.0 as isize + direction.0 as isize, plot.1 as isize + direction.1 as isize);
+    let ccw_plot = get_at(plot.0 as isize + ccw_curve.0, plot.1 as isize + ccw_curve.1);
+    let next_plot = get_at(plot.0 as isize + direction.0, plot.1 as isize + direction.1);
 
     // TODO - fix this traversal code
-    if ccw_plot != None {
+    if Option::is_some(&ccw_plot) {
         // if the CCW plot IS in the region, ROTATE CCW
-        print!("↺ ");
-        return Some((*plot, ccw_curve));
-    } else if next_plot != None {
+        // print!("↺ ");
+        Some((*plot, ccw_curve))
+    } else if Option::is_some(&next_plot) {
         // if the NEXT plot IS in the region, MOVE NEXT
-        print!("{} ", debug_direction(direction));
-        return Some((((plot.0 as isize + direction.0 as isize) as usize, (plot.1 as isize + direction.1 as isize) as usize), direction));
+        // print!("{} ", debug_direction(direction));
+        Some((((plot.0 as isize + direction.0) as usize, (plot.1 as isize + direction.1) as usize), direction))
     } else {
         // if the NEXT plot is NOT in the region, ROTATE CW
         let cw_curve = directions.iter().rev().collect_vec().windows(2).find(|dd| *dd[0] == direction).map(|dd| *dd[1]).unwrap();
-        print!("↻ ");
-        return Some((*plot, cw_curve ))
+        // print!("↻ ");
+        Some((*plot, cw_curve ))
     }
 
     // When we get back to the FIRST plot and are at the same direction, stop counting
 }
 
+#[allow(dead_code)]
 fn debug_direction(d: Direction) -> char {
-    let arrows = HashMap::from([
-        ((-1 as isize, 0 as isize), '↑'),
-        ((1 as isize, 0 as isize),  '↓'),
-        ((0 as isize, -1 as isize), '←'),
-        ((0 as isize, 1 as isize),  '→')
+    let arrows: HashMap<(isize, isize), char> = HashMap::from([
+        ((-1, 0), '↑'),
+        ((1, 0),  '↓'),
+        ((0, -1), '←'),
+        ((0, 1),  '→')
     ]);
 
     *arrows.get(&d).unwrap_or(&'X')

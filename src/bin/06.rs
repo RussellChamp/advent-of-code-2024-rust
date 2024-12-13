@@ -3,8 +3,8 @@ use itertools::Itertools;
 advent_of_code::solution!(6);
 
 pub fn part_one(input: &str) -> Option<u32> {
-    let mut pos = (0 as isize, 0 as isize);
-    let mut dir = (-1 as isize, 0 as isize);
+    let mut pos = (0_isize, 0_isize);
+    let mut dir = (-1_isize, 0_isize);
 
     let grid = input.lines().enumerate().map(|(line_idx, line)| {
         let chars = line.chars().enumerate().map(|(char_idx, char)| {
@@ -34,8 +34,8 @@ pub fn part_one(input: &str) -> Option<u32> {
 
         if grid[new_pos.0 as usize][new_pos.1 as usize] == '#' {
             // if it is a blocker, turn 90deg
-            let directions = vec![(-1, 0), (0, 1), (1, 0), (0, -1), (-1, 0)];
-            let new_dir = *directions.iter().skip_while(|d| **d != dir).skip(1).next().unwrap();
+            let directions = [(-1, 0), (0, 1), (1, 0), (0, -1), (-1, 0)];
+            let new_dir = *directions.iter().skip_while(|d| **d != dir).nth(1).unwrap();
             dir.0 = new_dir.0;
             dir.1 = new_dir.1;
         } else {
@@ -51,7 +51,7 @@ pub fn part_one(input: &str) -> Option<u32> {
     Some(count_spaces(visited) as u32)
 }
 
-pub fn part_two(input: &str) -> Option<u32> {
+pub fn part_two(_input: &str) -> Option<u32> {
     None
 }
 

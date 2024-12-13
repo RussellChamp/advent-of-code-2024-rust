@@ -1,4 +1,4 @@
-use std::ops::{Div, Mul};
+use std::ops::Mul;
 
 use itertools::Itertools;
 
@@ -14,7 +14,7 @@ pub fn part_one(input: &str) -> Option<u32> {
     Some(total_count as u32)
 }
 
-pub fn part_two(input: &str) -> Option<u32> {
+pub fn part_two(_input: &str) -> Option<u32> {
     None
 }
 
@@ -29,7 +29,7 @@ fn step_stones(stones: &mut Vec<String>, max_steps: usize) {
             if stone == "0" {
                 stones[idx] = String::from("1");
             } else if stone_length % 2 == 0 {
-                let mut stone_iter = stone.chars().into_iter();
+                let mut stone_iter = stone.chars();
                 let first_half = stone_iter.by_ref().take(stone_length/2).collect::<String>();
                 let second_half = stone_iter.by_ref().take(stone_length/2).collect::<String>().parse::<usize>().unwrap().to_string();
 

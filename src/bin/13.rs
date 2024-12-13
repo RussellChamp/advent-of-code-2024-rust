@@ -48,13 +48,13 @@ pub fn part_one(input: &str) -> Option<u32> {
     Some(total_tokens)
 }
 
-pub fn part_two(input: &str) -> Option<u32> {
+pub fn part_two(_input: &str) -> Option<u32> {
     None
 }
 
 // TODO figure out how to reference-ify this
 fn find_matches(machine: Machine) -> impl Iterator<Item=(u32, u32)> {
-    let result = (0..=100).flat_map(move |a_presses| {
+    (0..=100).flat_map(move |a_presses| {
         (0..=100).filter_map(move |b_presses| {
             let pos_x = machine.a_button.x * a_presses + machine.b_button.x * b_presses;
             let pos_y = machine.a_button.y * a_presses + machine.b_button.y * b_presses;
@@ -65,8 +65,7 @@ fn find_matches(machine: Machine) -> impl Iterator<Item=(u32, u32)> {
                 None
             }
         })
-    });
-    result
+    })
 }
 
 #[cfg(test)]

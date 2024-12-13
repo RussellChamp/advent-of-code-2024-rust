@@ -35,9 +35,13 @@ pub fn part_one(input: &str) -> Option<u32> {
     Some(total)
 }
 
-pub fn part_two(input: &str) -> Option<u32> {
+#[allow(unreachable_code)]
+pub fn part_two(_input: &str) -> Option<u32> {
+    // TODO: Fix this
+    return None;
+
     // Parse the rules
-    let mut reader = input.lines();
+    let mut reader = _input.lines();
     let rules: Vec<_> = reader.by_ref().take_while(|l| !l.is_empty()).map(|r| r.split('|').collect::<Vec<&str>>()).collect();
 
     // println!("{} lines", rules.len());
@@ -52,7 +56,7 @@ pub fn part_two(input: &str) -> Option<u32> {
         let is_valid = get_is_valid(&rules, &pages);
 
         if is_valid {
-            return t
+            t
         } else {
             // println!("Invalid pages {:?}", pages);
 
@@ -75,7 +79,7 @@ pub fn part_two(input: &str) -> Option<u32> {
     Some(total)
 }
 
-fn get_is_valid(rules: &Vec<Vec<&str>>, pages: &Vec<&str>) -> bool {
+fn get_is_valid(rules: &[Vec<&str>], pages: &[&str]) -> bool {
     for (page_a_idx, page_a) in pages.iter().enumerate() {
         for page_b in &pages[page_a_idx..] {
             // check for a violation of the rules!
@@ -91,7 +95,7 @@ fn find_valid_book<'a>(rules: &Vec<Vec<&str>>, pages: Vec<&'a str>, remaining_pa
 
     let is_valid = get_is_valid(rules, &pages);
 
-    if remaining_pages.len() == 0  && is_valid {
+    if remaining_pages.is_empty()  && is_valid {
 
         return Some(pages)
     }
@@ -108,10 +112,6 @@ fn find_valid_book<'a>(rules: &Vec<Vec<&str>>, pages: Vec<&'a str>, remaining_pa
 
         find_valid_book(rules, next_pages, next_remaining_pages)
     })
-}
-
-fn factorial(n: usize) -> Option<usize> {
-    (1..n).try_fold(n, usize::checked_mul)
 }
 
 #[cfg(test)]
