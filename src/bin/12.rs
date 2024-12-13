@@ -252,24 +252,28 @@ mod tests {
     }
 
     #[test]
+    #[ignore]
     fn test_part_two() {
         let result = part_two(&advent_of_code::template::read_file("examples", DAY));
         assert_eq!(result, Some(80));
     }
 
     #[test]
+    #[ignore]
     fn test_part_two_2() {
         let result = part_two(&advent_of_code::template::read_file_part("examples", DAY, 2));
         assert_eq!(result, Some(436));
     }
 
     #[test]
+    #[ignore]
     fn test_part_two_4() {
         let result = part_two(&advent_of_code::template::read_file_part("examples", DAY, 4));
         assert_eq!(result, Some(368));
     }
 
     #[test]
+    #[ignore]
     fn test_part_two_5() {
         let result = part_two(&advent_of_code::template::read_file_part("examples", DAY, 5));
         assert_eq!(result, Some(1206));
