@@ -69,7 +69,7 @@ pub fn part_two(input: &str) -> Option<u64> {
         Machine { a_button, b_button, prize }
     }).collect_vec();
 
-    println!("PROCESSING {} MACHINES", machines.len());
+    // println!("PROCESSING {} MACHINES", machines.len());
     let wins = machines.iter().filter_map(|Machine { a_button, b_button, prize }| {
 
         let denom = (a_button.x * b_button.y) - (a_button.y * b_button.x );
@@ -77,23 +77,23 @@ pub fn part_two(input: &str) -> Option<u64> {
         let b_numer = (prize.y * a_button.x) - (prize.x * a_button.y);
 
         if a_numer % denom != 0 || b_numer % denom != 0 {
-            print!("❌");
+            // print!("❌");
             return None;
         }
 
         let a_presses = a_numer / denom;
         let b_presses = b_numer / denom;
 
-        print!("✔️ ");
+        // print!("✔️ ");
         Some(3 * a_presses + b_presses)
         // println!("MATCHES {:?}", matches);
     }).collect_vec();
 
-    println!();
-    println!("WON {} PRIZES!", wins.len());
+    // println!();
+    // println!("WON {} PRIZES!", wins.len());
 
     let total_tokens: isize = wins.into_iter().sum();
-    println!("COST {} TOKENS!", total_tokens);
+    // println!("COST {} TOKENS!", total_tokens);
     Some(total_tokens as u64)
 }
 
