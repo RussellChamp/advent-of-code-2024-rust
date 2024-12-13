@@ -18,33 +18,32 @@ pub fn part_two(_input: &str) -> Option<u32> {
     None
 }
 
-fn step_stones(stones: &mut Vec<String>, max_steps: usize) {
+fn step_stones(stones: &mut Vec<usize>, max_steps: usize) {
     for _step in 0..max_steps {
         // println!("STEP #{step}: {:?} stones", stones.len());
         // stones.clone_from(&process_stones(stones).iter().map(|s| s as &str).collect_vec());
         // stones = next_step.clone().iter().map(|s| s as &str).collect_vec();
         for idx in (0..stones.len()).rev() {
             let stone = &stones[idx];
-            let stone_length = stone.len();
-            if stone == "0" {
-                stones[idx] = String::from("1");
-            } else if stone_length % 2 == 0 {
-                let mut stone_iter = stone.chars();
-                let first_half = stone_iter.by_ref().take(stone_length/2).collect::<String>();
-                let second_half = stone_iter.by_ref().take(stone_length/2).collect::<String>().parse::<usize>().unwrap().to_string();
+            let stone_digits = stone.checked_ilog10().unwrap_or(0) + 1;
+            if *stone == 0 {
+                stones[idx] = 1;
+            } else if stone_digits % 2 == 0 {
+                let stone_chars = stone.to_string().chars().collect_vec();
+                let first_half = stone_chars.iter().take(stone_digits as usize / 2).collect::<String>().parse::<usize>().unwrap();
+                let second_half = stone_chars.iter().skip(stone_digits as usize / 2).take(stone_digits as usize / 2).collect::<String>().parse::<usize>().unwrap();
 
                 stones[idx] = first_half;
                 stones.insert(idx + 1, second_half);
             } else {
-                let new_stone = stone.parse::<usize>().unwrap().mul(2024).to_string();
-                stones[idx] = new_stone;
+                stones[idx] = stone.mul(2024);
             }
         }
     }
 }
 
-fn vecify_stones(input: &str) -> Vec<String> {
-    input.strip_suffix("\n").unwrap().split(" ").map(|s| s.to_string()).collect_vec()
+fn vecify_stones(input: &str) -> Vec<usize> {
+    input.strip_suffix("\n").unwrap().split(" ").map(|s| s.parse::<usize>().unwrap()).collect_vec()
 }
 
 #[cfg(test)]
