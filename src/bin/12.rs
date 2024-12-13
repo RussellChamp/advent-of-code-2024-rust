@@ -72,14 +72,14 @@ pub fn part_two(input: &str) -> Option<u32> {
     }
 
     let w = plots.iter().map(|p| p.iter().map(|p| p.letter).collect::<String>()).join("\n");
-    println!("{}", w);
+    // println!("{}", w);
 
     let total = regions.iter().sorted_by_key(|r| r.0).fold(0, |sum, (region_id, region)| {
         let start_plot = find_plot(&plots, |p| p.region_id == Some(*region_id)).unwrap();
         print!("REGION {}:", region.id);
         let edges = traverse_start(&plots, &start_plot);
         let total = sum + (region.count * edges);
-        println!(" = {} * {} = {}", region.count, edges, region.count * edges);
+        // println!(" = {} * {} = {}", region.count, edges, region.count * edges);
         total
     });
 

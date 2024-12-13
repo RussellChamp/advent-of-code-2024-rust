@@ -27,7 +27,7 @@ pub fn part_one(input: &str) -> Option<u32> {
     };
 
     loop {
-        println!("At {:?} going {:?}", pos, dir);
+        // println!("At {:?} going {:?}", pos, dir);
 
         let new_pos = (pos.0 + dir.0, pos.1 + dir.1);
         if !is_valid_position(new_pos) { break }
@@ -46,7 +46,7 @@ pub fn part_one(input: &str) -> Option<u32> {
         }
     }
 
-    println!("Made it out!");
+    // println!("Made it out!");
 
     Some(count_spaces(visited) as u32)
 }

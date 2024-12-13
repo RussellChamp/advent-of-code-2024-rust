@@ -9,7 +9,7 @@ pub fn part_one(input: &str) -> Option<u32> {
     step_stones(&mut stones, 25);
 
     let total_count = stones.len();
-    println!("FINAL STONES: {:?} stones", total_count);
+    // println!("FINAL STONES: {:?} stones", total_count);
 
     Some(total_count as u32)
 }
