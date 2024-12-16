@@ -34,17 +34,17 @@ fn get_direction(c: char) -> (isize, isize) {
 pub fn part_one(input: &str) -> Option<u32> {
 
     let mut i = input.lines();
-    let mut grid = i.by_ref().take_while(|l| !l.is_empty()).map(|l| l.chars().map(|c| get_tile_object(c)).collect_vec()).collect_vec();
+    let mut grid = i.by_ref().take_while(|l| !l.is_empty()).map(|l| l.chars().map(get_tile_object).collect_vec()).collect_vec();
 
     let moves = i.by_ref().flat_map(|l| {
-        l.chars().map(|c| get_direction(c)).collect_vec()
+        l.chars().map(get_direction).collect_vec()
     });
 
     let mut robot_pos = grid.iter().enumerate().find_map(|(row_idx, row)| {
         row.iter().enumerate().find_map(|(col_idx, t)| if *t == TileObject::Robot { Some((row_idx, col_idx)) } else { None })
     }).unwrap();
 
-    grid[robot_pos.0 as usize][robot_pos.1 as usize] = TileObject::Empty;
+    grid[robot_pos.0][robot_pos.1] = TileObject::Empty;
 
     // println!("GRID ({}, {})", grid_height, grid_width);
     // println!("ROBOT ({}, {})", robot_pos.0, robot_pos.1);

@@ -1,5 +1,3 @@
-use std::u32::MAX;
-
 use itertools::Itertools;
 
 advent_of_code::solution!(16);
@@ -32,7 +30,7 @@ struct Cost {
 
 pub fn part_one(input: &str) -> Option<u32> {
     let grid = input.lines().map(|l| {
-        l.chars().map(|c| get_tile_object(c)).collect_vec()
+        l.chars().map(get_tile_object).collect_vec()
     }).collect_vec();
 
     let grid_height = grid.len();
@@ -46,7 +44,7 @@ pub fn part_one(input: &str) -> Option<u32> {
 
     // From the starting position facing EAST
     score_card[start_pos.0][start_pos.1] = Some(0);
-    explore(&grid, &mut score_card, start_pos, Cost { up: 1001, down: 1001, left: MAX, right: 1 });
+    explore(&grid, &mut score_card, start_pos, Cost { up: 1001, down: 1001, left: u32::MAX, right: 1 });
 
     let end_pos = grid.iter().enumerate().find_map(|(row_idx, row)| {
         row.iter().enumerate().find_map(|(col_idx, t)| if *t == TileObject::End { Some((row_idx, col_idx)) } else { None })
@@ -69,44 +67,46 @@ fn explore(grid: &Vec<Vec<TileObject>>, score_card: &mut Vec<Vec<Option<u32>>>, 
     let pos_score = score_card[pos.0][pos.1].unwrap();
 
     let get_step = |row_idx, col_idx| -> Option<(usize, usize)> {
-        if !(0..grid_height as isize).contains(&row_idx) || !(0..grid_width as isize).contains(&col_idx) { return None }
-        else if grid[row_idx as usize][col_idx as usize] == TileObject::Wall { return None }
-        else { return Some((row_idx as usize, col_idx as usize)) }
+        if !(0..grid_height as isize).contains(&row_idx) || !(0..grid_width as isize).contains(&col_idx) || grid[row_idx as usize][col_idx as usize] == TileObject::Wall {
+            None
+        } else {
+            Some((row_idx as usize, col_idx as usize))
+        }
     };
 
     // UP
     if let Some(step) = get_step(pos.0 as isize - 1, pos.1 as isize) {
         let next_cost = score_card[step.0][step.1];
-        if move_cost.up != MAX && (Option::is_none(&next_cost) || next_cost.unwrap() > pos_score + move_cost.up) {
+        if move_cost.up != u32::MAX && (Option::is_none(&next_cost) || next_cost.unwrap() > pos_score + move_cost.up) {
             score_card[step.0][step.1] = Some(pos_score + move_cost.up);
-            explore(grid, score_card, step, Cost { up: 1, down: MAX, left: 1001, right: 1001 });
+            explore(grid, score_card, step, Cost { up: 1, down: u32::MAX, left: 1001, right: 1001 });
         }
     }
 
     // DOWN
     if let Some(step) = get_step(pos.0 as isize + 1, pos.1 as isize) {
         let next_cost = score_card[step.0][step.1];
-        if move_cost.down != MAX && (Option::is_none(&next_cost) || next_cost.unwrap() > pos_score + move_cost.down) {
+        if move_cost.down != u32::MAX && (Option::is_none(&next_cost) || next_cost.unwrap() > pos_score + move_cost.down) {
             score_card[step.0][step.1] = Some(pos_score + move_cost.down);
-            explore(grid, score_card, step, Cost { up: MAX, down: 1, left: 1001, right: 1001 });
+            explore(grid, score_card, step, Cost { up: u32::MAX, down: 1, left: 1001, right: 1001 });
         }
     }
 
     // LEFT
     if let Some(step) = get_step(pos.0 as isize, pos.1 as isize - 1) {
         let next_cost = score_card[step.0][step.1];
-        if move_cost.left != MAX && (Option::is_none(&next_cost) || next_cost.unwrap() > pos_score + move_cost.left) {
+        if move_cost.left != u32::MAX && (Option::is_none(&next_cost) || next_cost.unwrap() > pos_score + move_cost.left) {
             score_card[step.0][step.1] = Some(pos_score + move_cost.left);
-            explore(grid, score_card, step, Cost { up: 1001, down: 1001, left: 1, right: MAX });
+            explore(grid, score_card, step, Cost { up: 1001, down: 1001, left: 1, right: u32::MAX });
         }
     }
 
     // RIGHT
     if let Some(step) = get_step(pos.0 as isize, pos.1 as isize + 1) {
         let next_cost = score_card[step.0][step.1];
-        if move_cost.right != MAX && (Option::is_none(&next_cost) || next_cost.unwrap() > pos_score + move_cost.right) {
+        if move_cost.right != u32::MAX && (Option::is_none(&next_cost) || next_cost.unwrap() > pos_score + move_cost.right) {
             score_card[step.0][step.1] = Some(pos_score + move_cost.right);
-            explore(grid, score_card, step, Cost { up: 1001, down: 1001, left: MAX, right: 1 });
+            explore(grid, score_card, step, Cost { up: 1001, down: 1001, left: u32::MAX, right: 1 });
         }
     }
 
