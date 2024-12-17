@@ -17,8 +17,21 @@ pub fn part_one(input: &str) -> Option<usize> {
     Some(total)
 }
 
-pub fn part_two(_input: &str) -> Option<u32> {
-    None
+pub fn part_two(input: &str) -> Option<usize> {
+    let total: usize = input.lines().filter_map(|line| {
+        // println!("{line}");
+        let m: Vec<&str> = line.split(": ").collect();
+        let total = m[0].parse::<usize>().unwrap();
+        let values: Vec<usize> = m[1].split(' ').map(|v| v.parse::<usize>().unwrap()).collect();
+
+        // println!("LINE: {} = {:?}", total, values);
+
+        if can_calc_2(total, &values) { Some(total) } else { None }
+        // Some(total)
+    }).sum();
+    // println!("TOTAL: {}", total);
+
+    Some(total)
 }
 
 // allowed operators: + and *
@@ -37,6 +50,21 @@ fn can_calc(total: usize, values: &[usize]) -> bool {
 fn process(sum: &[usize], next_value: &usize) -> Vec<usize> {
     sum.iter().flat_map(|v| {
         vec![v + next_value, v * next_value]
+    }).collect()
+}
+
+fn can_calc_2(total: usize, values: &[usize]) -> bool {
+    let is_valid = values.iter().fold(vec![0_usize], |subtotals, next_value| {
+        process_2(&subtotals, next_value)
+    }).iter().any(|t| *t == total);
+
+    is_valid
+}
+
+fn process_2(sum: &[usize], next_value: &usize) -> Vec<usize> {
+    sum.iter().flat_map(|v| {
+        let concat_val = (v.to_string() + next_value.to_string().as_str()).parse::<usize>().unwrap();
+        vec![v + next_value, v * next_value, concat_val]
     }).collect()
 }
 
@@ -70,7 +98,7 @@ mod tests {
 
     #[test]
     fn test_part_two() {
-        let result = part_two(&advent_of_code::template::read_file("examples", DAY));
-        assert_eq!(result, None);
+        let result: Option<usize> = part_two(&advent_of_code::template::read_file("examples", DAY));
+        assert_eq!(result, Some(11387));
     }
 }
