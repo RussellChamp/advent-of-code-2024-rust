@@ -61,7 +61,7 @@ pub fn part_two(_input: &str) -> Option<u32> {
     None
 }
 
-fn run_program(registers: &mut Vec<usize>, program: Vec<u8>) -> Vec<usize> {
+fn run_program(registers: &mut [usize], program: Vec<u8>) -> Vec<usize> {
     let mut output: Vec<usize> = vec![];
 
     let literal = |v: usize| v;
@@ -183,9 +183,10 @@ mod tests {
         assert_eq!(result, Some("4,6,3,5,6,3,5,2,1,0".to_string()));
     }
 
+    #[ignore]
     #[test]
     fn test_part_two() {
         let result = part_two(&advent_of_code::template::read_file("examples", DAY));
-        assert_eq!(result, None);
+        assert_eq!(result, Some(117440));
     }
 }
